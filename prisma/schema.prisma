@@ -1,0 +1,71 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Badges {
+  name       String     @id
+  image      String
+  created_at DateTime   @default(now())
+  updated_at DateTime   @updatedAt
+  project    Projects[]
+
+  @@map("badges")
+}
+
+model Projects {
+  id          Int         @id @default(autoincrement())
+  name        String
+  type        ProjectType
+  description String
+  image       String
+  position    Int?        @unique
+  created_at  DateTime    @default(now())
+  updated_at  DateTime    @updatedAt
+  badges      Badges[]
+  links       Links[]
+
+  @@map("projects")
+}
+
+// model ProjectBadges {
+//   id         Int      @id @default(autoincrement())
+//   badge_name String
+//   project_id Int
+//   badge      Badges   @relation(fields: [badge_name], references: [name])
+//   project    Projects @relation(fields: [project_id], references: [id])
+
+//   @@map("project_badges")
+// }
+
+model Links {
+  id         Int       @id @default(autoincrement())
+  label      LinkLabel
+  href       String
+  project_id Int
+  created_at DateTime  @default(now())
+  updated_at DateTime  @updatedAt
+  project    Projects  @relation(fields: [project_id], references: [id])
+
+  @@map("links")
+}
+
+enum ProjectType {
+  FrontEnd
+  BackEnd
+  FullStack
+}
+
+enum LinkLabel {
+  FrontEnd_Repo @map("FrontEnd Repo")
+  BackEnd_Repo  @map("BackEnd Repo")
+  GitHub_Repo   @map("GitHub Repo")
+  Deploy
+}
