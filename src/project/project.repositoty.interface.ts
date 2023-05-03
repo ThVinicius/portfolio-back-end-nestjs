@@ -1,5 +1,5 @@
-import { ProjectEntity } from './entities/project.entity';
+import { ReturnProjectsDTO } from './dtos/return-projects.dto';
 
 export interface ProjectRepositoryInterface {
-  getAll(): Promise<ProjectEntity[]>;
+  getAll(): Promise<ReturnProjectsDTO>;
 }
