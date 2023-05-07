@@ -1,6 +1,6 @@
-import { Badges } from '@prisma/client';
+import { Badge } from '@prisma/client';
 
-export function filterBadges(allBadges: Badges[], filterBadges: string[]) {
+export function filterBadges(allBadges: Badge[], filterBadges: string[]) {
   const hash = {} as Record<string, boolean>;
   const arrFilter = [] as string[];
 
