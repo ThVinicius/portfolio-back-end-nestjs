@@ -32,7 +32,7 @@ export class PrismaClientExceptionFilter extends BaseExceptionFilter {
       }
 
       case 'P2025': {
-        const allBadges = await prisma.badges.findMany();
+        const allBadges = await prisma.badge.findMany();
         const requestBody = request.body as CreateProjectDTO;
 
         const requestBadges = requestBody.badges.filter(
