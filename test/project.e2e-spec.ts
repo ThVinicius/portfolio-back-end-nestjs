@@ -3,6 +3,9 @@ import { INestApplication } from '@nestjs/common';
 import * as request from 'supertest';
 import { ProjectModule } from './../src/project/project.module';
 import { PrismaService } from '../src/database/prisma.service';
+import { ProjectTypeEnum } from '../src/project/enums/type.enum';
+import { ProjectLinkEnum } from '../src/project/enums/link.enum';
+import { ProjectEntity } from 'src/project/entities/project.entity';
 
 describe('ProjectController (e2e)', () => {
   let app: INestApplication;
@@ -19,7 +22,7 @@ describe('ProjectController (e2e)', () => {
 
   describe('/api/projects (GET)', () => {
     it('should return all projects', async () => {
-      const projects = await prisma.projects.findMany({
+      const projects = await prisma.project.findMany({
         select: {
           id: true,
           name: true,
@@ -36,6 +39,33 @@ describe('ProjectController (e2e)', () => {
 
       expect(response.statusCode).toEqual(200);
       expect(response.body).toEqual(projects);
+    });
+  });
+
+  describe('/api/projects (POST)', () => {
+    it('should save a project if you pass all data correctly', async () => {
+      const project = {
+        name: 'test',
+        type: ProjectTypeEnum.FullStack,
+        description: 'test',
+        image: 'https://google.com',
+        badges: ['react', 'node'],
+        links: [{ label: ProjectLinkEnum.Deploy, href: 'https://google.com' }],
+      };
+
+      const response = await request(app.getHttpServer())
+        .post('/api/projects')
+        .send(project);
+
+      const body = response.body as ProjectEntity;
+
+      expect(response.statusCode).toBe(201);
+
+      expect(body.name).toBe(project.name);
+      expect(body.description).toBe(project.description);
+      expect(body.image).toBe(project.image);
+
+      await prisma.project.delete({ where: { id: body.id } });
     });
   });
 });
