@@ -10,17 +10,17 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model Badges {
-  name       String     @id
+model Badge {
+  name       String    @id
   image      String
-  created_at DateTime   @default(now())
-  updated_at DateTime   @updatedAt
-  project    Projects[]
+  created_at DateTime  @default(now())
+  updated_at DateTime  @updatedAt
+  project    Project[]
 
   @@map("badges")
 }
 
-model Projects {
+model Project {
   id          Int         @id @default(autoincrement())
   name        String
   type        ProjectType
@@ -29,30 +29,20 @@ model Projects {
   position    Int?        @unique
   created_at  DateTime    @default(now())
   updated_at  DateTime    @updatedAt
-  badges      Badges[]
-  links       Links[]
+  badges      Badge[]
+  links       Link[]
 
   @@map("projects")
 }
 
-// model ProjectBadges {
-//   id         Int      @id @default(autoincrement())
-//   badge_name String
-//   project_id Int
-//   badge      Badges   @relation(fields: [badge_name], references: [name])
-//   project    Projects @relation(fields: [project_id], references: [id])
-
-//   @@map("project_badges")
-// }
-
-model Links {
+model Link {
   id         Int       @id @default(autoincrement())
   label      LinkLabel
   href       String
   project_id Int
   created_at DateTime  @default(now())
   updated_at DateTime  @updatedAt
-  project    Projects  @relation(fields: [project_id], references: [id])
+  project    Project   @relation(fields: [project_id], references: [id], onDelete: Cascade)
 
   @@map("links")
 }
