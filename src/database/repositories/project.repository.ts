@@ -21,7 +21,7 @@ export class PrismaProjectRepository implements ProjectRepositoryInterface {
       (badge) => typeof badge !== 'string',
     ) as Badge[];
 
-    return await this.prisma.projects.create({
+    return await this.prisma.project.create({
       data: {
         name,
         type,
@@ -39,7 +39,7 @@ export class PrismaProjectRepository implements ProjectRepositoryInterface {
   }
 
   async getAll(): Promise<ReturnProjectsDTO> {
-    return await this.prisma.projects.findMany({
+    return await this.prisma.project.findMany({
       select: {
         id: true,
         name: true,
