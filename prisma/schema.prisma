@@ -10,6 +10,16 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+model User {
+  id         Int      @id @default(autoincrement())
+  username   String   @unique
+  password   String
+  created_at DateTime @default(now())
+  updated_at DateTime @default(now()) @updatedAt
+
+  @@map("users")
+}
+
 model Badge {
   name       String    @id
   image      String
