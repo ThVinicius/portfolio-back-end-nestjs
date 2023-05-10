@@ -5,7 +5,7 @@ import { ProjectModule } from './../src/project/project.module';
 import { PrismaService } from '../src/database/prisma.service';
 import { ProjectTypeEnum } from '../src/project/enums/type.enum';
 import { ProjectLinkEnum } from '../src/project/enums/link.enum';
-import { ProjectEntity } from 'src/project/entities/project.entity';
+import { ProjectEntity } from '../src/project/entities/project.entity';
 
 describe('ProjectController (e2e)', () => {
   let app: INestApplication;
@@ -53,9 +53,14 @@ describe('ProjectController (e2e)', () => {
         links: [{ label: ProjectLinkEnum.Deploy, href: 'https://google.com' }],
       };
 
+      const signIn = await request(app.getHttpServer())
+        .post('/api/auth/sign-in')
+        .send({ username: 'pacheco', password: '123' });
+
       const response = await request(app.getHttpServer())
         .post('/api/projects')
-        .send(project);
+        .send(project)
+        .set('Authorization', `Bearer ${signIn.body.access_token}`);
 
       const body = response.body as ProjectEntity;
 
