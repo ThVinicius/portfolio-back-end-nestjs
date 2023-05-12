@@ -31,7 +31,6 @@ export class AuthService {
     const comparePassword = await bcrypt.compare(password, user.password);
 
     if (!comparePassword) {
-      console.log('senha errada!');
       throw new UnauthorizedError(
         'O endereço de e-mail ou a senha fornecidos estão incorretos.',
       );
